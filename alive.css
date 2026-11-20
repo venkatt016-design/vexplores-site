@@ -1,0 +1,60 @@
+/* A white, living editorial canvas. Original logo pixels are untouched. */
+:root{--living-ease:cubic-bezier(.2,.8,.2,1)}
+.portal,.site-shell{transition:opacity .26s ease,visibility .26s!important}
+.story-intro,.intro-revealed .story-intro{transition:opacity .22s ease,transform .28s var(--living-ease),visibility 0s!important;transition-delay:0s!important}
+.letter-entry,.story-intro.intro-final .letter-entry{transition:opacity .2s ease,transform .22s ease!important;transition-delay:0s!important;max-height:120px}
+.story-intro .letter-logo-enter{display:grid;grid-template-columns:74px auto;grid-template-rows:1fr 1fr;gap:0 12px;align-items:center;padding:5px 18px;margin-top:10px;min-height:84px;border:1px solid #d2e0cd;border-radius:18px;background:#f8fbf4}
+.letter-logo-enter img{grid-row:1/3;width:74px;height:74px;object-fit:contain;margin:0}
+.letter-logo-enter>span{align-self:end;font:600 16px var(--ui-font);line-height:1.5}
+.letter-logo-enter>small{align-self:start;font:11px var(--ui-font);line-height:1.8}
+.story-intro .letter-actions{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:14px;margin-top:12px}
+.letter-actions .ink-replay{font-size:11px;padding:6px 14px}
+.site-shell .section{animation:none!important;opacity:1;transform:none}
+.site-shell .section h2{transition:none}
+#belief-title,#dream-title{scroll-margin-top:140px}
+.before-entry:not(.intro-revealed) .logo-orbit img{animation:none;transform:rotateX(var(--rx)) rotateY(var(--ry));will-change:auto}
+.alive-logo{translate:0 0;rotate:0deg}
+.alive-logo.motion-in-view,.before-entry:not(.intro-revealed) .logo-orbit img.alive-logo.motion-in-view{animation:featherBreath 11s cubic-bezier(.42,0,.2,1) infinite!important;transform-origin:50% 72%}
+.brand .alive-logo{animation-duration:13s!important}
+@keyframes featherBreath{0%,20%{transform:perspective(850px) rotateY(0deg) rotateX(0deg);translate:0 0;rotate:0deg}66%,100%{transform:perspective(850px) rotateY(360deg) rotateX(0deg);translate:0 0;rotate:0deg}}
+.dance-letter{display:inline-block;font-family:inherit!important;font-size:inherit!important;font-weight:inherit!important;font-style:inherit!important;line-height:inherit!important;color:inherit!important;letter-spacing:inherit!important;translate:0 0;rotate:0deg;transform-origin:50% 85%;animation:letterLilt 6.2s ease-in-out var(--beat,0s) infinite;animation-play-state:paused}
+.ambient-type.motion-in-view .dance-letter{animation-play-state:running}
+.dance-letter{margin:0!important;padding:0!important}
+.section-label .dance-letter,.eyebrow .dance-letter,.portal-copy>p .dance-letter,.portal-foot .dance-letter,.tap-label .dance-letter{animation-name:littleLilt;animation-duration:5.8s}
+@keyframes letterLilt{0%,100%{translate:0 1px;rotate:-.15deg}50%{translate:0 -2.6px;rotate:.25deg}}
+@keyframes littleLilt{0%,100%{translate:0 .5px;rotate:-.1deg}50%{translate:0 -1.1px;rotate:.15deg}}
+.handwritten-note{font-size:34px;line-height:1.4;letter-spacing:0;overflow:visible}
+.handwritten-note .dance-letter{animation-name:littleLilt;animation-duration:4.3s}
+.philosophy{display:grid;grid-template-columns:1.3fr 1fr;align-items:center;gap:60px;border-block:1px solid #dce6d9;padding-block:55px}
+.philosophy h2{font:clamp(34px,4vw,58px)/1.1 var(--story-font);color:#193f30;letter-spacing:-.025em;margin-top:20px}
+.philosophy h2 em{font-family:var(--music-font);font-weight:400;color:#63844f;font-size:.85em}
+.philosophy blockquote{margin:26px 0 0;padding:0 0 0 23px;border-left:2px solid #b4965d;font:clamp(22px,2.4vw,34px)/1.48 var(--body-font);color:#345b44;max-width:630px}
+.philosophy cite{display:block;font:28px/1.3 var(--signature-font);color:#6e8859;margin-top:18px}
+.nature-world{margin:0}.nature-world .living-scene{height:320px}.nature-world .handwritten-note{text-align:center;margin:5px 0 0}
+.living-heading{align-items:center;gap:36px}.gallery-note{font:15px/1.6 var(--ui-font);color:#647566;max-width:410px;margin:16px 0 0}
+.adventure-grid{row-gap:42px}.adventure-grid .living-scene{height:350px}.living-pair figcaption{padding-top:13px;border-top:1px solid #e3e9df}
+.living-pair figcaption b{letter-spacing:.12em;line-height:1.5}.living-pair figcaption span{line-height:1.4}
+.film,.album,.craft article{position:relative}
+.film::before,.album::before,.craft article::before{content:"";position:absolute;z-index:1;width:68px;height:2px;left:24px;top:0;background:linear-gradient(90deg,transparent,#b39758,#69b99d,transparent);transform-origin:left;animation:blockGlimmer 4s ease-in-out infinite;animation-play-state:paused;pointer-events:none}
+.film.motion-in-view::before,.album.motion-in-view::before,.craft article.motion-in-view::before{animation-play-state:running}
+.film.future::before{content:"02";height:auto;width:auto;background:none;animation:none;left:auto;z-index:0}
+@keyframes blockGlimmer{0%,100%{translate:0 0;scale:.7 1;opacity:.4}50%{translate:60px 0;scale:1.4 1;opacity:1}}
+.featured-print.motion-in-view{animation:printFloat 5s ease-in-out infinite}
+@keyframes printFloat{0%,100%{translate:0 3px}50%{translate:0 -4px}}
+.quick-flourish .ink-paragraph{animation:quickInk .45s var(--living-ease) both}
+@keyframes quickInk{from{translate:0 5px}to{translate:0 0}}
+body.before-entry .site-shell *,body.entered .portal *,body.page-inactive *,body.cinema-open *,body.selecting-copy .dance-letter{animation-play-state:paused!important}
+body.paused *,body.paused *::before,body.paused *::after{animation:none!important;transition:none!important}
+body.paused .dance-letter,body.paused .alive-logo{translate:0 0!important;rotate:0deg!important}
+body.paused .alive-logo.motion-in-view,body.paused.before-entry:not(.intro-revealed) .logo-orbit img.alive-logo.motion-in-view{animation:none!important}
+@media(max-width:760px){
+ .philosophy{grid-template-columns:1fr;gap:20px;padding-block:35px}.philosophy h2{font-size:38px}.philosophy blockquote{font-size:24px;padding-left:16px;margin-top:22px}
+ .nature-world .living-scene{height:275px}.nature-world .handwritten-note{font-size:29px}.adventure-grid{row-gap:30px}.adventure-grid .living-scene{height:305px}.gallery-note{font-size:14px;max-width:none;margin:12px 0 20px}.living-heading h2{margin-top:0}
+ .story-intro .letter-actions{flex-direction:column;gap:6px}.letter-logo-enter>span{font-size:14px}.story-intro .letter-logo-enter{grid-template-columns:60px auto;min-height:74px;padding:4px 14px}.letter-logo-enter img{width:60px;height:60px}.story-intro .intro-kicker{margin-bottom:8px}
+ .story-intro{max-height:calc(100dvh - 105px)}.letter-scroll,#introLetter.letter-complete{max-height:36dvh}.handwritten-note{font-size:29px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none!important;transition:none!important}
+ .dance-letter,.alive-logo{translate:0 0!important;rotate:0deg!important}
+ .alive-logo.motion-in-view,.before-entry:not(.intro-revealed) .logo-orbit img.alive-logo.motion-in-view{animation:none!important}
+}

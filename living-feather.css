@@ -1,0 +1,25 @@
+/* The obsolete ink/toy scenes are intentionally not loaded in this review.
+   Human activity scenes still require approved rigged models and authored clips.
+   Do not describe these typographic passages as completed 3D human animation. */
+.living-review .living-scene{display:none!important}
+.living-review .living-pair{display:flex;flex-direction:column;gap:36px;align-items:flex-start}
+.living-review .living-pair figure{background:none!important;border:0!important;box-shadow:none!important;width:auto;max-width:80%;margin:0;padding:0}
+.living-review .living-pair figure:nth-child(even){align-self:flex-end;text-align:right}
+.living-review .living-pair figure:nth-child(even) figcaption{text-align:right}
+.living-review .living-pair figcaption{padding:0!important}
+.living-review .living-pair figcaption span{font-size:clamp(24px,3.8vw,44px);line-height:1.35;font-weight:400}
+.living-review .living-gallery{border:0!important;padding-block:54px!important}
+.living-review .living-heading{margin-bottom:36px}
+.living-review .living-heading h2{font-size:clamp(40px,6.5vw,82px);line-height:1.05;letter-spacing:-.045em}
+.living-review .nature-world{background:none!important;border:0!important;box-shadow:none!important}
+.living-review .feather-pair-art{display:block;width:min(320px,85%);height:auto;object-fit:contain;margin:0 auto}
+.living-review .nature-world .handwritten-note{text-align:center}
+.living-review #featherCursor{width:44px!important;height:72px!important;transform-origin:22px 66px!important}
+.living-review #featherModel{display:block;width:44px!important;height:72px!important;opacity:1!important}
+.living-review .handwritten-note{animation:none!important;transform:none!important}
+@media(max-width:760px){
+  .living-review .living-pair figure{max-width:100%}
+  .living-review .living-gallery{padding-block:32px!important}
+  .living-review .living-heading{gap:24px}
+  .living-review .feather-pair-art{width:180px}
+}

@@ -1,0 +1,44 @@
+/* Small, unboxed moments composed from Venkat's existing moving-image library. */
+.flow .hero-exploration{font:500 clamp(16px,1.7vw,21px)/1.55 var(--ui-font,system-ui);color:#826b42;margin:24px 0 0;max-width:32em}
+.flow .hero-exploration+.lead{margin-top:16px}
+.flow .light-moment.section{display:grid;grid-template-columns:1.15fr 1fr;align-items:center;gap:clamp(12px,3vw,56px);padding-block:44px;isolation:isolate;border:0;animation:none;opacity:1;transform:none;overflow:clip}
+.light-moment--reverse .light-art{order:2}
+.light-moment--reverse .light-copy{order:1;padding-left:4%}
+.light-art{--light-x:0px;--light-y:0px;position:relative;display:block;width:100%;aspect-ratio:1.65;padding:0;border:0;background:transparent;border-radius:0;box-shadow:none;overflow:visible;perspective:800px;touch-action:pan-y;color:#5b715f;cursor:pointer;isolation:isolate;-webkit-tap-highlight-color:transparent}
+.light-canvas,.light-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;transform:translate3d(var(--light-x),var(--light-y),0);transform-origin:50% 60%;transition:none}
+.light-canvas{opacity:0}
+[data-light][data-ready="true"] .light-canvas{opacity:1}
+[data-light][data-ready="true"] .light-poster{visibility:hidden}
+.light-poster{mask-image:radial-gradient(ellipse at center,#000 12%,#0009 40%,transparent 68%);-webkit-mask-image:radial-gradient(ellipse at center,#000 12%,#0009 40%,transparent 68%);mix-blend-mode:multiply;opacity:.88}
+[data-light="wonder"] .light-poster{filter:invert(1) sepia(.55) saturate(1.1);opacity:.7}
+[data-light="bike"] .light-poster,[data-light="car"] .light-poster{opacity:1}
+[data-light="sky"] .light-poster{filter:brightness(1.2);mix-blend-mode:multiply;opacity:1}
+.painted-moment .light-art{aspect-ratio:16/9;min-height:220px}
+.adventure-grid>.painted-moment:last-child:nth-child(odd){grid-column:1/-1;width:100%;max-width:640px;justify-self:center}
+.night-moments .painted-moment .light-art{aspect-ratio:1.7}
+.painted-moment .light-response{min-height:28px;text-align:center;padding:0 10px;font-size:12px}
+.painted-moment .light-touch{bottom:2%;font-size:10px}
+.light-art::before{content:"";position:absolute;inset:14% 7%;z-index:-1;background:radial-gradient(ellipse,#f8e9c840,transparent 65%);pointer-events:none}
+.light-art:focus-visible{outline:2px solid #648d78;outline-offset:3px;border-radius:46%}
+.light-touch{position:absolute;bottom:2%;left:50%;transform:translateX(-50%);white-space:nowrap;font:10px/1.5 var(--ui-font,system-ui);letter-spacing:.07em;opacity:.78;border-bottom:1px solid #b5c3b780;padding:10px 0 3px;pointer-events:none}
+.light-art:hover .light-touch,.light-art:focus-visible .light-touch{color:#946c31;opacity:1}
+.light-copy{padding:20px 0;position:relative;z-index:1;pointer-events:none}
+.light-eyebrow{font:10px/1.7 var(--ui-font,system-ui);letter-spacing:.14em;color:#6a7d70;margin:0 0 20px}
+.flow .light-copy h2{font-family:var(--music-font,Georgia);font-weight:400;font-size:clamp(30px,3.25vw,52px);line-height:1.14;letter-spacing:-.035em;color:#234b3d;margin:0;animation:none;transform:none}
+.light-copy h2 em{font-weight:400;color:#887043}
+.light-copy .light-note{font:13px/1.8 var(--ui-font,system-ui);color:#6a796f;max-width:290px;margin:20px 0 0}
+.light-response{display:block;min-height:23px;margin-top:8px;font:12px/1.8 var(--ui-font,system-ui);color:#4d755c}
+.light-moment[data-motion="still"] .light-touch{opacity:.6}
+/* Keep the shared existing 3D canvas beneath navigation and clip its draw area. */
+.site-shell>#activitiesCanvas{z-index:4}
+.site-shell>.nav{z-index:25}
+@media(max-width:700px){
+ .flow .light-moment.section{grid-template-columns:1fr;gap:8px;padding-block:28px}
+ .light-moment .light-art{order:1;max-width:520px;justify-self:center;aspect-ratio:1.55}
+ .light-moment .light-copy{order:2;padding:10px 10px 0;text-align:center}
+ .flow .light-copy h2{font-size:34px;line-height:1.17}
+ .light-copy .light-note{margin:15px auto 0;max-width:280px}
+ .light-eyebrow{margin-bottom:12px;font-size:9px}
+ .light-touch{font-size:10px;bottom:0}
+}
+@media(prefers-reduced-motion:reduce){.light-canvas,.light-poster{transform:none!important}.light-art{scroll-behavior:auto}}

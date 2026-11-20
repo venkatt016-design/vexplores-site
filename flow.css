@@ -1,0 +1,58 @@
+/* Flow study: restrained ink, readable type and one shared breeze. */
+.flow{--flow-ink:#244a3d;--flow-sage:#91ab98;--flow-gold:#ad9572}
+.flow .portal,.flow .site-shell,.flow footer{background:#fff}
+.flow #astral{opacity:.55}.flow #hubDust{opacity:.17}.flow .hub-aurora{opacity:.055}
+.flow .logo-orbit{perspective:850px}.flow .alive-logo{backface-visibility:visible;transform-style:preserve-3d}
+.flow .brand .alive-logo{animation-delay:-3.8s!important}
+.flow .identity-card .alive-logo{animation-delay:-2.2s!important}
+.flow .handwritten-note{font-family:var(--signature-font);font-weight:400;transform:none;animation:scriptFlow 7s ease-in-out infinite}
+@keyframes scriptFlow{0%,100%{translate:0 1px;rotate:-.4deg}50%{translate:2px -1px;rotate:.3deg}}
+.flow .ambient-type.has-bloomed .dance-letter{animation-name:letterLilt,inkBloom;animation-duration:6.2s,.9s;animation-delay:var(--beat),var(--arrival);animation-timing-function:ease-in-out,cubic-bezier(.16,.65,.25,1);animation-iteration-count:infinite,1;animation-fill-mode:none,both}
+.flow .section-label.has-bloomed .dance-letter,.flow .eyebrow.has-bloomed .dance-letter,.flow .portal-foot.has-bloomed .dance-letter,.flow .tap-label.has-bloomed .dance-letter{animation-name:littleLilt,inkBloom;animation-duration:5.8s,.8s}
+@keyframes inkBloom{from{opacity:1;transform:translateY(4px)}to{opacity:1;transform:none}}
+.flow .featured-print{box-shadow:8px 12px 30px #3552420b;border-color:#e3e9e2;transform:rotate(1.3deg);transition:transform .65s cubic-bezier(.16,.65,.25,1)}
+.flow .featured-print:hover{transform:rotate(0deg) translateY(-2px)}
+.flow .film,.flow .album{border-color:#e2e8e0;border-radius:2px;box-shadow:none}
+.flow .film::before,.flow .album::before,.flow .craft article::before{display:none}
+.flow .film.future::before{display:block;opacity:.5}
+.flow .section{position:relative}
+.flow .philosophy{gap:48px;border-color:#e5eae2;padding-block:64px}
+.flow .living-gallery.section{padding-top:45px;padding-bottom:42px;border-color:#e6eae4}
+.flow .living-heading{margin-bottom:16px}.flow .living-heading h2{font-size:clamp(32px,3.6vw,49px)}
+.flow .living-pair{gap:34px}.flow .adventure-grid{row-gap:54px}
+.flow .living-scene::before{display:none}
+.flow .living-pair figcaption{border-top:0;text-align:left;padding:8px 28px 0}
+.flow .living-pair figcaption b{font:10px/1.6 var(--ui-font);letter-spacing:.1em;color:#798675}
+.flow .living-pair figcaption span{font-family:var(--music-font);font-style:italic;font-size:25px;color:#4d6e56;margin-top:3px}
+.flow .nature-world .handwritten-note{font-size:30px;margin-top:0}
+.flow .philosophy blockquote{border-left:1px solid #bda989}
+/* Reading text fades as one intact run, then rests; it never becomes dancing glyphs. */
+.flow .reading-copy{transform:none!important;translate:none!important;rotate:none!important;word-spacing:normal}
+.flow .reading-copy.has-bloomed{animation:readingFade .55s ease-out both}
+.flow .reading-copy *{animation:none!important;transform:none!important;translate:none!important;rotate:none!important;filter:none!important}
+.flow .reading-copy .pointer-glyph{display:inline!important;will-change:auto;letter-spacing:inherit!important}
+.flow .reading-copy .pointer-word{display:inline!important;white-space:normal}
+.flow .living-pair figcaption b{font-size:11px;letter-spacing:.09em;line-height:1.7}
+@keyframes readingFade{from{opacity:.8}to{opacity:1}}
+.flow .flow-worlds{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.flow .hero h2,.flow .section-head h2,.flow .philosophy h2{letter-spacing:-.035em}
+.flow .hero .lead{line-height:1.75}.flow .gallery-note{line-height:1.75}
+/* The precise tip stays on the pointer; the 54px vane bends above it. */
+.flow #featherCursor{width:36px!important;height:64px!important;transform-origin:14px 58px!important;filter:none!important;transition:opacity .18s ease!important}
+.flow #featherModel{width:36px!important;height:64px!important;filter:none!important}
+.flow .feather-cursor-glow{display:none!important}
+.flow #cursorDust{opacity:.3}
+.flow #featherCursor::before,.flow #featherCursor::after{display:none!important}
+.flow .flow-thread{position:absolute;pointer-events:none;left:0;right:0;top:-22px;width:100%;height:64px;overflow:visible;color:#b5c7b6;opacity:.5}
+.flow-thread path{fill:none;stroke:currentColor;stroke-width:.7;vector-effect:non-scaling-stroke}
+.flow-thread .thread-light{stroke:#a6926f;stroke-width:1.2;stroke-dasharray:5 120;animation:threadDrift 16s linear infinite}
+@keyframes threadDrift{to{stroke-dashoffset:-500}}
+.flow .section:not(.motion-in-view) .flow-thread *{animation-play-state:paused}
+/* Offscreen text has no retained animation layers; visible headings still dance. */
+.flow .ambient-type:not(.motion-in-view) .dance-letter{animation:none;transform:none}
+body.flow.paused *,body.flow.paused *::before,body.flow.paused *::after{animation:none!important;transition:none!important}
+body.flow.paused .alive-logo,body.flow.paused.before-entry:not(.intro-revealed) .logo-orbit img.alive-logo.motion-in-view{animation:none!important;transform:none!important;translate:none!important;rotate:none!important}
+body.flow.paused .dance-letter{transform:none!important;translate:none!important;rotate:none!important;filter:none!important;opacity:1!important}
+body.flow.page-inactive *,body.flow.cinema-open *,body.flow.before-entry .site-shell *,body.flow.entered .portal *{animation-play-state:paused!important}
+@media(max-width:760px){.flow .living-pair{gap:35px}.flow .living-pair figcaption{padding-inline:10px}.flow .living-pair figcaption span{font-size:24px}.flow .philosophy{gap:10px;padding-block:40px}.flow .flow-thread{height:42px;top:-16px}.flow .nature-world .handwritten-note{font-size:27px}.flow .gallery-note{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.flow *,.flow *::before,.flow *::after{animation:none!important;transition:none!important}.flow .alive-logo,.flow .dance-letter{transform:none!important;translate:none!important;rotate:none!important;opacity:1!important;filter:none!important}}

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "daybreak",
+    "fps": 60,
+    "frames": 365,
+    "duration": 6.083333333333333,
+    "bytes": 672199,
+    "interpolation": "FFmpeg minterpolate: bidirectional motion compensation; three-cycle padding",
+    "previous_sha256": "a19d887f8d9d76304535bda08d603ded1aad04633f40a3a3a373a2d0a9964a9f",
+    "seam_difference": 1.584031595614712,
+    "adjacent_difference": 0.08270037615740741,
+    "seam_finish": "12 frames each side eased through the same boundary frame, forward motion throughout"
+  },
+  {
+    "id": "flow",
+    "fps": 60,
+    "frames": 365,
+    "duration": 6.083333333333333,
+    "bytes": 447239,
+    "interpolation": "FFmpeg minterpolate: bidirectional motion compensation; three-cycle padding",
+    "previous_sha256": "a18ac916f350ab94a02099c00d3afca05613f20e0f18dc451af069f0689ea525",
+    "seam_difference": 0.9887494373713992,
+    "adjacent_difference": 0.13127330889917696,
+    "seam_finish": "12 frames each side eased through the same boundary frame, forward motion throughout"
+  }
+]

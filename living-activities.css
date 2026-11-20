@@ -1,0 +1,33 @@
+/* Unboxed 3D vignettes: typography and illustrations share the white page. */
+#activitiesCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:4}
+.before-entry #activitiesCanvas,.cinema-open #activitiesCanvas{visibility:hidden}
+.living-review .living-pair{display:grid;grid-template-columns:1fr 1fr;gap:60px 5%;align-items:start}
+.living-review .living-pair figure{position:relative;width:100%;max-width:none;min-width:0;isolation:isolate}
+.living-review .living-pair figure:nth-child(even){margin-top:150px;text-align:left;align-self:auto}
+.living-review .living-pair figure:nth-child(even) figcaption{text-align:left}
+.living-review .living-scene{display:block!important;position:relative;height:330px;min-height:0!important;width:100%;border:0!important;background:none!important;box-shadow:none!important;overflow:visible!important;pointer-events:none}
+.living-review .living-scene::before{content:attr(data-word);position:absolute;left:0;right:0;top:28%;font-family:Arial,sans-serif;font-size:clamp(90px,11vw,156px);line-height:.9;letter-spacing:-.085em;font-weight:900;color:#e9f0ec;text-align:center;transform:rotate(-6deg);z-index:-1}
+.living-review .living-scene[data-scene="sky"]::before{color:#e5eef3;transform:rotate(6deg)}
+.living-review .living-scene[data-scene="dance"]::before{color:#f3e9df}
+.living-review .living-scene[data-scene="bungee"]::before{color:#eee9f4;top:37%}
+.living-review .living-scene[data-scene="paddle"]::before{color:#e1efeb}
+.living-review .living-pair figcaption{position:relative;z-index:5;padding-top:12px!important;max-width:440px}
+.living-review .living-pair figcaption b{display:block;letter-spacing:.12em;font-size:10px;color:#50655d;margin-bottom:10px}
+.living-review .living-pair figcaption span{display:block;font-size:clamp(25px,3vw,36px);line-height:1.2;color:#153e34}
+.living-review .living-gallery{padding-block:70px!important}
+.living-review .living-heading{margin-bottom:20px}
+.living-review .scene-fallback{display:none}
+.activity-note{font:12px/1.6 system-ui,sans-serif;max-width:580px;color:#53655d;margin:36px 0 0}
+.activity-credit{font:11px/1.7 system-ui,sans-serif;max-width:680px;margin:20px auto;color:#58675f}
+.activity-credit a{color:inherit;text-underline-offset:3px}
+.scene-static{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:none}
+.activities-static .scene-static{display:block}
+@media(max-width:700px){
+  .living-review .living-pair{grid-template-columns:1fr;gap:44px}
+  .living-review .living-pair figure:nth-child(even){margin-top:0}
+  .living-review .living-scene{height:280px}
+  .living-review .living-scene::before{font-size:112px;top:30%}
+  .living-review .living-pair figcaption{max-width:92%}
+  .living-review .living-gallery{padding-block:40px!important}
+}
+@media(prefers-reduced-motion:reduce){.living-scene{animation:none!important;transition:none!important}}
