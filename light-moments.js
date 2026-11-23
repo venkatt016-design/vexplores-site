@@ -186,7 +186,7 @@ export class LightMoment {
     if(!this.video.src){this.video.src=`assets/light-loops/${this.id}.mp4?v=hero05`;this.video.load();}
     if(this.video.paused&&!this.playPending){
       this.playPending=true;
-      this.video.play().catch(()=>{this.autoplayBlocked=true;this.el.dataset.motion='still';this.stop();}).finally(()=>{this.playPending=false;if(!this.moving())this.video.pause();});
+      this.video.play().catch(e=>{if(e&&e.name==='AbortError'){setTimeout(()=>this.sync(),200);return;} /* a scroll interrupted play: retry */ this.autoplayBlocked=true;this.el.dataset.motion='still';this.stop();}).finally(()=>{this.playPending=false;if(!this.moving())this.video.pause();});
     }
     this.watchFrames();
     if(!this.raf)this.raf=requestAnimationFrame(t=>this.frame(t));
@@ -220,6 +220,7 @@ const observer=new IntersectionObserver(entries=>{
 moments.forEach(m=>observer.observe(m.el));
 const sync=()=>moments.forEach(m=>m.sync());
 if(body)new MutationObserver(sync).observe(body,{attributes:true,attributeFilter:['class']});
-preference.addEventListener('change',sync);document.addEventListener('visibilitychange',sync);
+preference.addEventListener('change',sync);
+for(const ev of ['pointerdown','keydown','touchstart'])addEventListener(ev,()=>{let any=false;for(const m of moments)if(m.autoplayBlocked){m.autoplayBlocked=false;any=true;}if(any)sync();},{passive:true});document.addEventListener('visibilitychange',sync);
 addEventListener('pagehide',()=>moments.forEach(m=>m.stop()));addEventListener('pageshow',sync);
 // document.title is set in index.html (V EXPLORES · Venkat’s Creative Hub).
