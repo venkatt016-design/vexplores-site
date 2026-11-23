@@ -327,3 +327,6 @@ body.paused .venkat-signature{clip-path:none;opacity:1}
 body.paused .logo-orbit:hover img,body.paused .logo-orbit:focus-visible img{transform:none}
 body.paused .kinetic-lead-main,body.paused .kinetic-lead-script{opacity:1;filter:none;transform:none}
 .hub-motion-toggle:focus-visible{outline:3px solid #0c7891;outline-offset:3px}
+
+/* Perf: on touch devices keep the hub aurora still (blurred multiply layer is costly to re-raster). */
+@media(hover:none),(pointer:coarse){.hub-aurora i{animation-play-state:paused!important;will-change:auto}}

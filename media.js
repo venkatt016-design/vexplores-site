@@ -1,4 +1,4 @@
-import {catalog} from './media-catalog.js?v=final05';
+import {catalog} from './media-catalog.js?v=perf06';
 import {playable,embedURL} from './media-player.js?v=final04';
 const dialog=document.getElementById('cinema'),player=document.getElementById('cinemaPlayer');
 let opener;

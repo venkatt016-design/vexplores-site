@@ -1,5 +1,5 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+// three.js loads only on desktop pointer devices that show the feather cursor.
+let THREE, GLTFLoader;
 
 // The existing feather artwork is a real mesh. No generated replacement,
 // illustration, or background rectangle is used here.
@@ -9,6 +9,7 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 let started = false;
 
 async function init() {
+  THREE=await import('three');({GLTFLoader}=await import('three/addons/loaders/GLTFLoader.js'));
   const canvas = document.getElementById('featherModel');
   if (!canvas) return;
   let renderer;

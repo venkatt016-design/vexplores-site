@@ -31,7 +31,7 @@
   };
   // Only display typography dances. Paragraphs, form controls and navigation stay stable.
   document.querySelectorAll('.portal-copy h1,.portal-copy>p,.portal-foot,.tap-label,.hero h2,.eyebrow,.section-label,.living-heading h2,.section-head h2,.philosophy h2,.statement>h2,.craft>h2,footer>h2,footer>p').forEach(decorate);
-  document.querySelectorAll('img[src="assets/v-original-3d.png"]').forEach(img => img.classList.add('alive-logo'));
+  document.querySelectorAll('img[src^="assets/v-mark-"],img[src="assets/v-original-3d.png"]').forEach(img => img.classList.add('alive-logo'));
   if(body.classList.contains('flow')) document.querySelectorAll('.living-gallery,.philosophy,.craft').forEach((section,index)=>{
     const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
     svg.setAttribute('viewBox','0 0 1000 64');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');svg.classList.add('flow-thread');

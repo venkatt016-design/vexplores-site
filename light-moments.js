@@ -115,7 +115,7 @@ export class LightMoment {
     this.resizeObserver.observe(this.button);
   }
   available(){return this.visible&&!document.hidden&&body.classList.contains('entered')&&!body.classList.contains('cinema-open');}
-  moving(){return this.available()&&!preference.matches&&!body.classList.contains('paused')&&!savesData&&!this.lost&&!this.videoFailed&&!this.autoplayBlocked;}
+  moving(){return this.available()&&ACTIVE.has(this)&&!preference.matches&&!body.classList.contains('paused')&&!savesData&&!this.lost&&!this.videoFailed&&!this.autoplayBlocked;}
   bindCanvas(){
     const canvas=this.canvas;
     canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();if(canvas!==this.canvas)return;contextHolders.delete(this);this.lost=true;this.stop();this.el.dataset.ready='false';});
@@ -149,7 +149,7 @@ export class LightMoment {
     } catch(error) {this.failed=true;this.video.pause();console.warn('Light moment static fallback:',this.id,error.message);}
   }
   resize(){
-    const box=this.button.getBoundingClientRect();const dpr=Math.min(devicePixelRatio||1,1.35);
+    const box=this.button.getBoundingClientRect();const dpr=Math.min(devicePixelRatio||1,COARSE?1:1.25);
     const w=Math.max(1,Math.round(box.width*dpr)),h=Math.max(1,Math.round(box.height*dpr));
     if(this.canvas.width!==w||this.canvas.height!==h){this.canvas.width=w;this.canvas.height=h;}
   }
@@ -201,17 +201,22 @@ export class LightMoment {
       this.pulse*=Math.exp(-1.65*dt);
       this.button.style.setProperty('--light-x',`${((this.pose.x-.5)*9).toFixed(2)}px`);
       this.button.style.setProperty('--light-y',`${((.5-this.pose.y)*7).toFixed(2)}px`);
-      this.draw();
+      // 30 fps is enough for 24 fps loops; halves GPU fill cost.
+      if(this.textureDirty||now-(this.lastDraw||0)>=32){this.lastDraw=now;this.draw();}
     }
     this.raf=requestAnimationFrame(t=>this.frame(t));
   }
   snapshot(){return {id:this.id,visible:this.visible,ready:this.el.dataset.ready==='true',motion:this.el.dataset.motion,frames:this.frames,scheduled:!!this.raf,videoPaused:this.video.paused,time:this.video.currentTime,duration:this.video.duration,videoError:this.video.error?.code??null,contexts:contextHolders.size,pose:{...this.pose},pulse:this.pulse,bytesSource:this.video.currentSrc};}
 }
+const COARSE=matchMedia('(pointer:coarse)').matches;
+// Only the most-visible moments play video; the rest hold a still frame.
+const MAX_PLAYING=COARSE?2:4;const ACTIVE=new Set();
 export const moments=[...document.querySelectorAll('[data-light]')].map(el=>new LightMoment(el));
 const observer=new IntersectionObserver(entries=>{
-  for(const entry of entries){const m=moments.find(m=>m.el===entry.target);m.visible=entry.isIntersecting;}
+  for(const entry of entries){const m=moments.find(m=>m.el===entry.target);m.visible=entry.isIntersecting;m.ratio=entry.isIntersecting?entry.intersectionRatio:0;}
+  ACTIVE.clear();moments.filter(m=>m.visible).sort((a,b)=>(b.ratio||0)-(a.ratio||0)).slice(0,MAX_PLAYING).forEach(m=>ACTIVE.add(m));
   moments.forEach(m=>m.sync());
-},{threshold:0.08});
+},{threshold:[0.08,0.3,0.55,0.8,1]});
 moments.forEach(m=>observer.observe(m.el));
 const sync=()=>moments.forEach(m=>m.sync());
 if(body)new MutationObserver(sync).observe(body,{attributes:true,attributeFilter:['class']});
