@@ -183,7 +183,7 @@ export class LightMoment {
     const moving=this.moving()&&!this.failed;
     this.el.dataset.motion=moving?'playing':'still';
     if(!moving){this.stop();this.pose={x:.5,y:.5,hot:0};this.pulse=0;this.button.style.setProperty('--light-x','0px');this.button.style.setProperty('--light-y','0px');this.draw();return;}
-    if(!this.video.src){this.video.src=`assets/light-loops/${this.id}.mp4?v=hero05`;this.video.load();}
+    if(!this.video.src){this.video.src=`assets/light-loops/${this.id}.mp4?v=hero06`;this.video.load();}
     if(this.video.paused&&!this.playPending){
       this.playPending=true;
       this.video.play().catch(e=>{if(e&&e.name==='AbortError'){setTimeout(()=>this.sync(),200);return;} /* a scroll interrupted play: retry */ this.autoplayBlocked=true;this.el.dataset.motion='still';this.stop();}).finally(()=>{this.playPending=false;if(!this.moving())this.video.pause();});
