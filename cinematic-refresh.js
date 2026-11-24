@@ -1,6 +1,7 @@
 (() => {
   'use strict';
-  // V EXPLORES — long-exposure light painting (v11, 2026-11-20).
+  // V EXPLORES — long-exposure light painting (v12, 2026-11-24: calmer ambient ribbons,
+  // petal-arc click light with real drag, spring-follow pointer trail across the page).
   // Technique (after award-level WebGL trail sites): a moving light-head paints into a
   // persistent buffer that fades slowly, so streaks build and decay like a real long
   // exposure instead of being redrawn as lines. Clicks spawn light-painting gestures
@@ -22,17 +23,17 @@
   let width = 1, height = 1, dpr = 1, raf = 0, previous = 0, clock = 0;
   let pw = 1, ph = 1;
   let burstUntil = 0, wasRevealed = false;
-  const pointer = { x: .68, y: .49, tx: .68, ty: .49 };
+  const pointer = { x: .68, y: .49, tx: .68, ty: .49, hx: .68, hy: .49 };   // hx/hy: the V's own centre
   const palette = [
     [17, 111, 82], [181, 128, 38], [20, 112, 132], [184, 82, 54],
     [52, 136, 92], [150, 104, 34], [30, 96, 120], [158, 86, 82]
   ];
-  const ribbons = Array.from({ length: 7 }, (_, i) => ({
-    t: i / 7,
-    lane: (i % 7 - 3) / 3,
-    slope: (i % 4 - 1.5) * .055,
-    width: 1.6 + (i % 4) * .55,
-    speed: .16 + (i % 4) * .035,
+  const ribbons = Array.from({ length: 5 }, (_, i) => ({
+    t: i / 5,
+    lane: (i - 2) / 2,
+    slope: (i % 4 - 1.5) * .05,
+    width: 1.15 + (i % 4) * .38,
+    speed: .13 + (i % 4) * .028,
     color: palette[i % palette.length],
     hist: []
   }));
@@ -44,7 +45,7 @@
   // Long exposure without buffer ghosts: every light-head keeps a short history of where it
   // has been; each frame the history is redrawn with exact age-based decay (bands of age,
   // one path per band per layer), so the streak builds and dies like film exposure.
-  const EXPO = 3.4, SPARK_EXPO = 1.9, BANDS = 10;
+  const EXPO = 3.4, SPARK_EXPO = 1.25, TRAIL_EXPO = .62, BANDS = 10;
   const LAYERS = [[7, .06, 0], [3.2, .18, 0], [1.25, .82, 0], [.42, 1, .74]];
 
   function drawTrail(cx, hist, color, expo, now, layer) {
@@ -100,7 +101,7 @@
   }
 
   function stepRibbons(dt, active, emit) {
-    const boost = active ? 1.4 : 1;
+    const boost = active ? 1.15 : 1;
     ribbons.forEach((r, i) => {
       r.hist = r.hist || [];
       if (emit) {
@@ -108,8 +109,8 @@
         if (r.t >= 1) { r.t -= 1; r.hist.push({ break: true }); }
         const [x, y] = curvePoint(r, i, r.t);
         const env = Math.sin(Math.PI * r.t);
-        r.hist.push({ x, y, t: clock, a: (active ? 1 : .85) * env,
-          w: (r.width + (active ? 1.3 : 0)) * (.8 + .2 * Math.sin(clock * 2.1 + i)) });
+        r.hist.push({ x, y, t: clock, a: (active ? .82 : .6) * env,
+          w: (r.width + (active ? .5 : 0)) * (.85 + .15 * Math.sin(clock * 1.3 + i)) });
       }
       while (r.hist.length && (r.hist[0].break || clock - r.hist[0].t > EXPO)) r.hist.shift();
     });
@@ -138,18 +139,20 @@
 
   function spawn(x, y, strength = 1) {
     strength *= Math.max(.42, Math.min(1, Math.min(innerWidth, innerHeight) / 860));   // phone-sized bursts
-    const n = Math.round(5 + Math.min(1, strength) * 2);
+    const n = Math.round(4 + Math.min(1, strength));
     const base = Math.random() * Math.PI * 2;
+    const dir = Math.random() < .5 ? -1 : 1;               // one shared curl direction: reads as one gesture
+    const first = (Math.random() * palette.length) | 0;
     for (let i = 0; i < n; i++) {
-      const ang = base + (i / n) * Math.PI * 2 + (Math.random() - .5) * .4;
-      const speed = (420 + Math.random() * 260) * strength;
+      const ang = base + (i / n) * Math.PI * 2 + (Math.random() - .5) * .25;
+      const speed = (250 + Math.random() * 110) * strength;
       sparks.push({
         x, y, vx: Math.cos(ang) * speed, vy: Math.sin(ang) * speed,
-        turn: (Math.random() < .5 ? -1 : 1) * (2.4 + Math.random() * 1.8),
-        life: 1, decay: .62 + Math.random() * .22,
-        w: 1.8 + Math.random() * 1.6,
-        color: palette[(Math.random() * palette.length) | 0],
-        hist: [{ x, y, t: clock, a: .4, w: 1 }]
+        turn: dir * (1.0 + Math.random() * .7),
+        life: 1, decay: .95 + Math.random() * .2,
+        w: 1.15 + Math.random() * .75,
+        color: palette[(first + i * 2) % palette.length],
+        hist: [{ x, y, t: clock, a: .25, w: .8 }]
       });
     }
   }
@@ -160,20 +163,64 @@
       if (s.life > 0) {
         const cos = Math.cos(s.turn * dt), sin = Math.sin(s.turn * dt);
         const vx = s.vx * cos - s.vy * sin, vy = s.vx * sin + s.vy * cos;
-        const drag = Math.pow(.5, dt);
+        const drag = Math.pow(.11, dt);                    // strong air drag: quick out, soft settle
         s.vx = vx * drag; s.vy = vy * drag;
+        s.turn *= Math.pow(.55, dt);                       // the curl relaxes, so arcs open instead of looping
         s.x += s.vx * dt; s.y += s.vy * dt;
         s.life -= s.decay * dt;
-        const env = Math.max(0, Math.min(1, s.life * 2.4));
-        s.hist.push({ x: s.x, y: s.y, t: clock, a: env, w: s.w * (.55 + Math.max(0, s.life) * .75) });
+        const env = Math.max(0, Math.min(1, s.life * 2.4)) * .78;
+        s.hist.push({ x: s.x, y: s.y, t: clock, a: env, w: s.w * (.5 + Math.max(0, s.life) * .6) });
       }
       while (s.hist.length && clock - s.hist[0].t > SPARK_EXPO) s.hist.shift();
       if (s.life <= 0 && !s.hist.length) sparks.splice(i, 1);
     }
   }
 
+  // Pointer light trail (whole page, mouse only): the light-head is pulled toward the pointer by
+  // a near-critically-damped spring, so it lags, eases and settles like a real hand-held light.
+  const fine = matchMedia('(hover: hover) and (pointer: fine)');
+  const trail = { x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0, live: false, awake: false, glow: 0, hist: [] };
+  const SPRING = 120, DAMP = 2 * Math.sqrt(SPRING) * .92;
+  function trailAllowed() {
+    return fine.matches && !reduced.matches && !body.classList.contains('paused') && !body.classList.contains('cinema-open');
+  }
+  function stepTrail(dt) {
+    while (trail.hist.length && clock - trail.hist[0].t > TRAIL_EXPO) trail.hist.shift();
+    if (!trail.live) return;
+    const ax = SPRING * (trail.tx - trail.x) - DAMP * trail.vx, ay = SPRING * (trail.ty - trail.y) - DAMP * trail.vy;
+    trail.vx += ax * dt; trail.vy += ay * dt;
+    trail.x += trail.vx * dt; trail.y += trail.vy * dt;
+    const speed = Math.hypot(trail.vx, trail.vy);
+    const want = Math.max(0, Math.min(1, (speed - 40) / 620));          // still pointer = no light
+    trail.glow += (want - trail.glow) * (1 - Math.exp(-9 * dt));
+    if (trail.glow > .02) trail.hist.push({ x: trail.x, y: trail.y, t: clock, a: .7 * trail.glow, w: 1.45 + 1.45 * trail.glow });
+    while (trail.hist.length && clock - trail.hist[0].t > TRAIL_EXPO) trail.hist.shift();
+    if (speed < 6 && Math.hypot(trail.tx - trail.x, trail.ty - trail.y) < 1 && !trail.hist.length) trail.awake = false;
+  }
+  function trailColor() {
+    const f = (clock * .11) % palette.length, i = Math.floor(f), k = f - i;
+    const a = palette[i], b = palette[(i + 1) % palette.length];
+    return [0, 1, 2].map(c => Math.round(a[c] + (b[c] - a[c]) * k));
+  }
+  function wake() { if (!raf && shouldRun()) raf = requestAnimationFrame(frame); }
+  addEventListener('pointermove', event => {
+    if (event.pointerType && event.pointerType !== 'mouse') return;
+    if (!trailAllowed()) return;
+    trail.tx = event.clientX; trail.ty = event.clientY;
+    if (!trail.live) { trail.live = true; trail.x = trail.tx; trail.y = trail.ty; trail.vx = trail.vy = 0; }
+    trail.awake = true;
+    wake();
+  }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', () => { trail.live = false; trail.awake = false; });
+
   function renderSparks() {
     pctx.clearRect(0, 0, pw, ph);
+    if (trail.hist.length > 1) {
+      const col = trailColor();
+      for (let L = 0; L < LAYERS.length; L++) drawTrail(pctx, trail.hist, col, TRAIL_EXPO, clock, L);
+      const h = trail.hist[trail.hist.length - 1];
+      if (trail.glow > .08) headGlow(pctx, h, col, h.w * .55, h.a);
+    }
     for (let L = 0; L < LAYERS.length; L++) sparks.forEach(s => drawTrail(pctx, s.hist, s.color, SPARK_EXPO, clock, L));
     sparks.forEach(s => { const h = s.hist[s.hist.length - 1]; if (h && s.life > 0) headGlow(pctx, h, s.color, h.w, h.a); });
   }
@@ -184,7 +231,7 @@
   }
   function shouldRun() {
     if (document.hidden || reduced.matches || body.classList.contains('paused')) return false;
-    return ambientAllowed() || hasLight();
+    return ambientAllowed() || hasLight() || (trail.awake && trailAllowed());
   }
 
   function frame(now) {
@@ -195,22 +242,24 @@
     const dtAll = previous ? Math.min((now - previous) / 1000, .25) : 1 / 60;
     previous = now;
     const steps = Math.max(1, Math.ceil(dtAll * 48)), dt = dtAll / steps;
-    const ease = 1 - Math.exp(-3.2 * dtAll);
-    pointer.x += (pointer.tx - pointer.x) * ease;
-    pointer.y += (pointer.ty - pointer.y) * ease;
+    const ease = 1 - Math.exp(-2.0 * dt);              // eased inside every sub-step: no stair-steps in the streaks
     const active = body.classList.contains('exposure-burst') && now < burstUntil;
     const emit = ambientAllowed();
-    for (let k = 0; k < steps; k++) { clock += dt; stepRibbons(dt, active, emit); stepSparks(dt); }
+    for (let k = 0; k < steps; k++) {
+      clock += dt;
+      pointer.x += (pointer.tx - pointer.x) * ease; pointer.y += (pointer.ty - pointer.y) * ease;
+      stepRibbons(dt, active, emit); stepSparks(dt); stepTrail(dt);
+    }
     renderRibbons();
     renderSparks();
     raf = requestAnimationFrame(frame);
   }
 
-  function hasLight() { return sparks.length > 0 || ribbons.some(r => r.hist && r.hist.length); }
+  function hasLight() { return sparks.length > 0 || trail.hist.length > 0 || ribbons.some(r => r.hist && r.hist.length); }
 
   // A settled, readable still for Pause / reduced motion: expose ~3 s once, then hold.
   function still() {
-    sparks.length = 0;
+    sparks.length = 0; trail.hist.length = 0; trail.awake = false;
     pctx.clearRect(0, 0, pw, ph);
     ribbons.forEach(r => { r.hist = []; });
     if (body.classList.contains('entered') || body.classList.contains('intro-revealed')) { ctx.clearRect(0, 0, width, height); return; }
@@ -246,8 +295,8 @@
     const mark = document.getElementById('logoEnter')?.getBoundingClientRect();
     const box = canvas.getBoundingClientRect();
     if (!mark || !mark.width || !box.width) return;
-    pointer.tx = pointer.x = Math.max(.08, Math.min(.92, (mark.left + mark.width / 2 - box.left) / box.width));
-    pointer.ty = pointer.y = Math.max(.12, Math.min(.88, (mark.top + mark.height / 2 - box.top) / box.height));
+    pointer.tx = pointer.x = pointer.hx = Math.max(.08, Math.min(.92, (mark.left + mark.width / 2 - box.left) / box.width));
+    pointer.ty = pointer.y = pointer.hy = Math.max(.12, Math.min(.88, (mark.top + mark.height / 2 - box.top) / box.height));
   }
 
   function startBurst() {
@@ -266,8 +315,10 @@
     if (reduced.matches || body.classList.contains('paused')) return;
     if (!(event.target instanceof Element) || !event.target.closest('#logoEnter')) return;
     const box = canvas.getBoundingClientRect();
-    pointer.tx = Math.max(.08, Math.min(.92, (event.clientX - box.left) / box.width));
-    pointer.ty = Math.max(.15, Math.min(.82, (event.clientY - box.top) / box.height));
+    // The ribbons lean toward the pointer (a third of the way) instead of jumping onto it.
+    const px = (event.clientX - box.left) / box.width, py = (event.clientY - box.top) / box.height;
+    pointer.tx = Math.max(.08, Math.min(.92, pointer.hx + (px - pointer.hx) * .33));
+    pointer.ty = Math.max(.15, Math.min(.82, pointer.hy + (py - pointer.hy) * .33));
   }, { passive: true });
 
   // Click → light painting at the exact point. Never over reading text or form controls.
@@ -280,9 +331,10 @@
     const onIntro = !body.classList.contains('entered') && target.closest('.portal');
     if (!lightMoment && !onIntro) return;
     if (!lightMoment && target.closest(READABLE)) return;
+    if (!lightMoment && !target.closest('#logoEnter') && target.closest('button,a')) return;
     if (target.closest('#openHub') || (target.closest('#logoEnter') && body.classList.contains('intro-revealed'))) return;
     const onV = target.closest('#logoEnter');
-    spawn(event.clientX, event.clientY, onV ? 1.25 : lightMoment ? .62 : 1);   // smaller on portfolio moments
+    spawn(event.clientX, event.clientY, onV ? 1.1 : lightMoment ? .6 : .9);   // smaller on portfolio moments
     sync();
   }, { passive: true });
 
