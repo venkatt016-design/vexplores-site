@@ -23,7 +23,7 @@
   let width = 1, height = 1, dpr = 1, raf = 0, previous = 0, clock = 0;
   let pw = 1, ph = 1;
   let burstUntil = 0, wasRevealed = false;
-  const pointer = { x: .68, y: .49, tx: .68, ty: .49, hx: .68, hy: .49 };   // hx/hy: the V's own centre
+  const pointer = { x: .68, y: .49, tx: .68, ty: .49, hx: .68, hy: .49, vx: 0, vy: 0 };   // hx/hy: the V's own centre
   const palette = [
     [17, 111, 82], [181, 128, 38], [20, 112, 132], [184, 82, 54],
     [52, 136, 92], [150, 104, 34], [30, 96, 120], [158, 86, 82]
@@ -234,6 +234,7 @@
     return ambientAllowed() || hasLight() || (trail.awake && trailAllowed());
   }
 
+  const W = 1.7, W2 = W * W;
   function frame(now) {
     raf = 0;
     if (!shouldRun()) { previous = 0; return; }
@@ -242,12 +243,13 @@
     const dtAll = previous ? Math.min((now - previous) / 1000, .25) : 1 / 60;
     previous = now;
     const steps = Math.max(1, Math.ceil(dtAll * 48)), dt = dtAll / steps;
-    const ease = 1 - Math.exp(-2.0 * dt);              // eased inside every sub-step: no stair-steps in the streaks
     const active = body.classList.contains('exposure-burst') && now < burstUntil;
     const emit = ambientAllowed();
     for (let k = 0; k < steps; k++) {
       clock += dt;
-      pointer.x += (pointer.tx - pointer.x) * ease; pointer.y += (pointer.ty - pointer.y) * ease;
+      // critically-damped spring (no velocity jump, so the streaks bend as curves, never as corners)
+      pointer.vx += (W2 * (pointer.tx - pointer.x) - 2 * W * pointer.vx) * dt; pointer.x += pointer.vx * dt;
+      pointer.vy += (W2 * (pointer.ty - pointer.y) - 2 * W * pointer.vy) * dt; pointer.y += pointer.vy * dt;
       stepRibbons(dt, active, emit); stepSparks(dt); stepTrail(dt);
     }
     renderRibbons();
@@ -317,8 +319,8 @@
     const box = canvas.getBoundingClientRect();
     // The ribbons lean toward the pointer (a third of the way) instead of jumping onto it.
     const px = (event.clientX - box.left) / box.width, py = (event.clientY - box.top) / box.height;
-    pointer.tx = Math.max(.08, Math.min(.92, pointer.hx + (px - pointer.hx) * .33));
-    pointer.ty = Math.max(.15, Math.min(.82, pointer.hy + (py - pointer.hy) * .33));
+    pointer.tx = Math.max(.08, Math.min(.92, pointer.hx + (px - pointer.hx) * .25));
+    pointer.ty = Math.max(.15, Math.min(.82, pointer.hy + (py - pointer.hy) * .25));
   }, { passive: true });
 
   // Click → light painting at the exact point. Never over reading text or form controls.
@@ -362,7 +364,7 @@
         if (box && canvasBox.width && canvasBox.height) {
           pointer.tx = Math.max(.08, Math.min(.92, (box.left + box.width / 2 - canvasBox.left) / canvasBox.width));
           pointer.ty = Math.max(.12, Math.min(.82, (box.top + box.height / 2 - canvasBox.top) / canvasBox.height));
-          pointer.x = pointer.tx; pointer.y = pointer.ty;
+          pointer.x = pointer.tx; pointer.y = pointer.ty; pointer.vx = pointer.vy = 0;
           sync();
         }
       }, 1450);
