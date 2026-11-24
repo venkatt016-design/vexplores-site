@@ -5,7 +5,7 @@ const savesData = navigator.connection?.saveData === true;
 const contextHolders = new Set();
 const messages = {
   daybreak: ['A fresh start can be a small one.', 'Carry a little sunshine with you.'],
-  wonder: ['A little wonder goes a long way.', 'Your next idea might start with play.'],
+  wonder: ['A little awe goes a long way.', 'Your next idea might start with play.'],
   flow: ['Breathe. You can take your time.', 'Enjoy this part of the journey, too.'],
   bike: ['Keep going. Make the journey your own.', 'A little courage can set things in motion.'],
   sky: ['A new perspective can change everything.', 'Carry that feeling into the everyday.'],
@@ -21,7 +21,7 @@ const messages = {
   sing:['Give your good energy a voice.','A small melody can brighten a day.'],
   campfire:['Good company. Lasting memories.','Leave room for one more song.'],
   starlight:['Look up. There is more to wonder.','A quiet moment can hold a whole universe.'],
-  aurora:['Let wonder find you.','Some colours are worth slowing down for.']
+  aurora:['Let the light find you.','Some colours are worth slowing down for.']
 };
 const vertex = `attribute vec2 a; varying vec2 uv; void main(){uv=(a+1.)*.5;gl_Position=vec4(a,0.,1.);}`;
 const fragment = `precision highp float;
